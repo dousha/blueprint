@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="C">
+<head>
+    <meta charset="UTF-8">
+    <title>Blueprint - (no document)</title>
+    <link rel="stylesheet" href="static/98.css">
+    <link rel="stylesheet" href="static/index.css">
+    <script src="logic/draw.js"></script>
+    <script src="logic/wm.js"></script>
+    <script src="logic/main.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="title-bar">
+        <div class="title-bar-text">Blueprint - (no document)</div>
+        <div class="title-bar-controls">
+            <button aria-label="Help"></button>
+            <button aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="menu-bar">
+        <button class="menu-bar-button">File</button>
+        <button class="menu-bar-button">Edit</button>
+        <button class="menu-bar-button">View</button>
+        <button class="menu-bar-button">Help</button>
+    </div>
+    <div class="workspace" id="workspace">
+        <div class="draw-space" id="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="vertical-separator" id="vertical-separator"></div>
+        <div class="sidebar" id="sidebar-container">
+            <div class="hierarchy-view-container" id="hierarchy-view-container">
+                <ul class="tree-view hierarchy-view">
+                    <li>(Document Root)</li>
+                </ul>
+            </div>
+            <div class="horizontal-separator" id="sidebar-separator"></div>
+            <div class="properties-view-container" id="properties-view-container">
+                <table class="interactive properties-view">
+                    <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="status-bar base-color-background">
+        <p class="status-bar-field base-color-background" id="status">Ready.</p>
+        <p class="status-bar-field base-color-background coordinate-display" id="coordinate">(0, 0)</p>
+    </div>
+</div>
+<div class="command-prompt">
+    <span>Blueprint v0.0.1</span>
+    <br>
+    <span>Type [H] for help.</span>
+</div>
+</body>
+</html>

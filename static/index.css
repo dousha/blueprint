@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    user-select: none;
+}
+
+.base-color {
+    color: rgb(192, 192, 192);
+}
+
+.base-color-background {
+    background: rgb(192, 192, 192);
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: stretch;
+}
+
+.menu-bar {
+    display: flex;
+    flex-flow: row;
+    background: rgb(192, 192, 192);
+}
+
+.menu-bar-button {
+    box-shadow: none !important;
+    min-width: auto;
+    padding: 0 8px;
+}
+
+.menu-bar-button:focus {
+    background: darkblue;
+    color: white;
+}
+
+.coordinate-display {
+    width: 5rem;
+    flex-grow: 0 !important;
+}
+
+.toolbar {
+    display: flex;
+    flex-flow: row;
+    background: snow;
+}
+
+.workspace {
+    display: flex;
+    flex-flow: row;
+    justify-items: stretch;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.draw-space {
+    flex-grow: 1;
+    cursor: crosshair;
+}
+
+.sidebar {
+    background: rgb(192, 192, 192);
+    width: 20%;
+}
+
+.hierarchy-view-container {
+    height: 45%;
+}
+
+.hierarchy-view {
+    height: 100%;
+}
+
+.properties-view-container {
+    width: 100%;
+    overflow-y: auto;
+}
+
+.properties-view {
+    width: 100%;
+}
+
+.vertical-separator {
+    background: rgb(192, 192, 192);
+    width: 6px;
+    cursor: col-resize;
+}
+
+.horizontal-separator {
+    background: rgb(192, 192, 192);
+    height: 6px;
+    cursor: row-resize;
+}
+
+.command-prompt {
+    position: fixed;
+    bottom: calc(1rem + 4px);
+    left: 1rem;
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
