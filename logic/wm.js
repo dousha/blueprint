@@ -7,10 +7,15 @@ class WindowManager {
         const parent = document.getElementById('canvas-container');
         const rect = parent.getClientRects()[0];
 
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+        const containerWidth = Math.floor(rect.width * devicePixelRatio) / devicePixelRatio;
+        const containerHeight = Math.floor(rect.height * devicePixelRatio) / devicePixelRatio;
 
-        this.draw.updateCanvasSize(rect.width, rect.height);
+        canvas.width = Math.floor(rect.width * devicePixelRatio);
+        canvas.height = Math.floor(rect.height * devicePixelRatio);
+        canvas.style.width = `${containerWidth}px`;
+        canvas.style.height = `${containerHeight}px`;
+
+        this.draw.updateCanvasSize(canvas.width, canvas.height);
     }
 
     registerComponents() {
@@ -57,6 +62,7 @@ class WindowManager {
                 this.canvasPanel.style.width = `${leftWidth}px`;
                 this.sidebarPanel.style.width = `${rightWidth}px`;
                 this.resizeCanvas();
+                this.draw.paint();
             };
         });
         workspaceGrip.addEventListener('mouseup', () => {
@@ -80,6 +86,7 @@ class WindowManager {
 
         window.addEventListener('resize', this.windowResize);
         this.resizeCanvas();
+        this.draw.paint();
     }
 
     windowResize() {

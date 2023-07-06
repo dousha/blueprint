@@ -1,9 +1,12 @@
 class Draw {
     constructor(canvas) {
+        this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         const rect = canvas.getClientRects()[0];
         this.w = rect.width;
         this.h = rect.height;
+
+        this.objects.push(new Origin());
     }
 
     updateCanvasSize(w, h) {
@@ -13,13 +16,15 @@ class Draw {
 
     paint() {
         this.ctx.save();
-        this.ctx.translate(this.w / 2, this.h / 2)
+        this.ctx.translate(Math.floor(this.w / 2) - this.centerLeft, Math.floor(this.h / 2) - this.centerTop);
+        this.ctx.scale(devicePixelRatio, devicePixelRatio);
         this.objects.forEach(obj => {
             obj.draw(this.ctx);
-        })
+        });
         this.ctx.restore();
     }
 
+    canvas;
     ctx;
     w = 0;
     h = 0;
@@ -46,6 +51,23 @@ class DrawObject {
 
     draw(ctx) {
         // do nothing
+    }
+}
+
+class Origin extends DrawObject {
+    constructor() {
+        super();
+
+        this.baseColor = '#000000';
+        this.accentColor = '#ff00ff';
+    }
+
+    draw(ctx) {
+        ctx.fillStyle = this.baseColor;
+        ctx.fillRect(-5, 0, 11, 1);
+        ctx.fillRect(0, -5, 1, 11);
+        ctx.fillStyle = this.accentColor;
+        ctx.fillRect(0, 0, 1, 1);
     }
 }
 

@@ -36,6 +36,11 @@ body {
     color: white;
 }
 
+canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
 .coordinate-display {
     width: 5rem;
     flex-grow: 0 !important;
