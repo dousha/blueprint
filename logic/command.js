@@ -1,69 +1,118 @@
-class Command {
-    constructor() {
+class CommandProcessor {
+    constructor(rootCommands) {
+        this.currentCommands = rootCommands;
     }
 
     processKey(key) {
-        this.currentStateHandler(key);
-    }
-
-    stateBlankHandler(key) {
-        const k = key.toUpperCase();
-
-        switch (k) {
-            case 'R':
-                wm.writeMessage("select a starting corner, or [ESC] to cancel");
-                wm.setParameterInputVisibility(true);
-                this.currentStateHandler = this.rectangleHandler;
-                break;
-            case 'H':
-                wm.writeMessage(this.helpMessage);
-                break;
-            case 'P':
-                wm.setPanActive(true);
-                wm.writeMessage("Start panning, [ESC] end panning");
-                this.currentStateHandler = this.panningHandler;
-                break;
-            case 'ESCAPE':
-                wm.writeMessage("Cancel selection");
-                break;
-            default:
-                break;
-        }
-    }
-
-    rectangleHandler(key) {
-        // TODO
-        if (this.processParameterInput(key)) {
-            return;
-        }
-
-        const k = key.toUpperCase();
-
-        switch (k) {
-            case 'ESCAPE':
-                wm.writeMessage("Cancel [R]");
-                wm.setParameterInputVisibility(false);
-                this.currentStateHandler = this.stateBlankHandler;
-                break;
-            default:
-                break;
-        }
-    }
-
-    panningHandler(key) {
         if (key === 'Escape') {
-            wm.writeMessage("Cancel [P]");
-            wm.setPanActive(false);
-            this.currentStateHandler = this.stateBlankHandler;
+            if (this.commandCallStack.length === 0) {
+                wm.writeMessage("No command to cancel");
+                return;
+            }
+
+            const lastItem = this.commandCallStack.pop();
+            lastItem.cleanUp();
+            wm.writeMessage(`Cancel [${lastItem.key}]`);
+            this.currentCommands = lastItem.commands;
+        } else {
+            const item = this.currentCommands.find(it => it.key === key);
+            if (item == null) {
+                return;
+            }
+
+            const newCommands = item.process();
+            if (newCommands != null) {
+                const {cleanUp, commands} = newCommands;
+                const frame = {
+                    key: key,
+                    commands: this.currentCommands,
+                    cleanUp: cleanUp
+                };
+                this.commandCallStack.push(frame);
+                this.currentCommands = commands == null ? [] : commands;
+            }
         }
     }
 
-    processParameterInput(key) {
-        return false;
-    }
-
-    currentStateHandler = this.stateBlankHandler;
-    helpMessage = "[C] - Draw Circle\n[R] - Draw Rectangle\n[P] - Pan";
+    currentCommands = [];
+    commandCallStack = [];
 }
 
-const cmd = new Command();
+class Command {
+    brief() {
+        return "[key] Function of this command";
+    }
+
+    /**
+     *
+     * @returns {undefined | {cleanUp: () => void, commands?: Command[]} }
+     */
+    process() {
+        // do things here
+        // return a new key
+        return undefined;
+    }
+
+    key = 'key';
+}
+
+class HelpCommand extends Command {
+    brief() {
+        return "[H] Help"
+    }
+
+    process() {
+        cmd.currentCommands.forEach(it => {
+            wm.writeMessage(it.brief());
+        });
+        return undefined;
+    }
+
+    key = 'h';
+}
+
+class PanCommand extends Command {
+    brief() {
+        return "[P] Pan tool";
+    }
+
+    process() {
+        wm.writeMessage("Panning active");
+        wm.setPanActive(true);
+        return {
+            cleanUp: () => wm.setPanActive(false),
+        };
+    }
+
+    key = 'p';
+}
+
+class RectangleCommand extends Command {
+    brief() {
+        return "[R] Draw Rectangle";
+    }
+
+    process() {
+        wm.writeMessage("Specify a point to start");
+        wm.setParameterInputVisibility(true);
+        wm.setParameterCount(2);
+        wm.setParameterUpdateFunction((e) => {
+            const coordinates = wm.draw.clientCoordinateToDrawCoordinate(e);
+            wm.setParamValues(coordinates.x, coordinates.y);
+        });
+        return {
+            cleanUp: () => {
+                wm.setParameterInputVisibility(false);
+            },
+            commands: []
+        };
+    }
+
+    key = 'r';
+}
+
+const cmd = new CommandProcessor([
+    new HelpCommand(),
+    new PanCommand(),
+    new RectangleCommand(),
+]);

@@ -125,15 +125,18 @@ canvas {
 .parameter-input > table {
     border-collapse: separate;
     border-spacing: 0.4em;
+    background: transparent;
 }
 
 .parameter-input > table > tbody > tr > td {
+    background: white;
     display: table-cell;
     vertical-align: center;
     text-align: left;
     padding: 0 0.2em;
     min-width: 4em;
     height: 1em;
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
 }
 
 #parameter-1 {
@@ -150,4 +153,29 @@ canvas {
 
 #parameter-4 {
     border: 1px solid cyan;;
+}
+
+#parameter-1.active {
+    border: 1px solid red;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+#parameter-2.active {
+    border: 1px solid green;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+#parameter-3.active {
+    border: 1px solid blue;
+    background: rgba(0, 0, 255, 0.1);
+}
+
+#parameter-4.active {
+    border: 1px solid cyan;
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
 }

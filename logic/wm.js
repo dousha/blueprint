@@ -27,7 +27,12 @@ class WindowManager {
         this.coordinate = document.getElementById('coordinate');
         this.status = document.getElementById('status');
         this.output = document.getElementById('message');
-        this.parameters = document.getElementById('parameters');
+        this.parameterPanel = document.getElementById('parameters');
+        this.parameters[0] = document.getElementById('parameter-1');
+        this.parameters[1] = document.getElementById('parameter-2');
+        this.parameters[2] = document.getElementById('parameter-3');
+        this.parameters[3] = document.getElementById('parameter-4');
+
         this.draw = new Draw(document.getElementById('canvas'));
 
         const sideBarGrip = document.getElementById('sidebar-separator');
@@ -94,11 +99,9 @@ class WindowManager {
                 }
             }
 
-            const canvasRect = this.canvasPanel.getClientRects()[0]
-
-            this.parameters.style.left = `${e.clientX}px`;
-            this.parameters.style.top = `${e.clientY}px`;
-            this.parameterUpdateFunction(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
+            this.parameterPanel.style.left = `${e.clientX}px`;
+            this.parameterPanel.style.top = `${e.clientY}px`;
+            this.parameterUpdateFunction(e);
         });
 
         window.addEventListener('mouseup', () => {
@@ -111,10 +114,9 @@ class WindowManager {
         });
 
         this.canvasPanel.addEventListener('mousemove', e => {
-            const canvasRect = this.canvasPanel.getClientRects()[0];
-            const canvasOffset = this.draw.originOffset();
-            const relativeLeft = e.clientX - canvasRect.x - canvasOffset.x;
-            const relativeTop = e.clientY - canvasRect.y - canvasOffset.y;
+            const relativeCoordinate = this.draw.clientCoordinateToDrawCoordinate(e);
+            const relativeLeft = relativeCoordinate.x;
+            const relativeTop = relativeCoordinate.y;
             this.coordinate.innerText = `(${relativeLeft}, ${relativeTop})`;
         });
 
@@ -146,19 +148,35 @@ class WindowManager {
     }
 
     setParameterInputVisibility(v) {
-        this.parameters.style.display = v ? 'block' : 'none';
+        this.parameterPanel.style.display = v ? 'block' : 'none';
     }
 
     setParameterUpdateFunction(f) {
         this.parameterUpdateFunction = f;
     }
 
-    setParameterInputFilter(f) {
-        // TODO
+    setParameterCount(n) {
+        this.parameters.forEach(it => it.classList.add('hidden'));
+
+        for (let i = 0; i < n; i++) {
+            this.parameters[i].classList.remove('hidden');
+        }
     }
 
-    setParameterCount(n) {
-        // TODO
+    setParamValues(a, b, c, d) {
+        this.parameters[0].innerText = a;
+        this.parameters[1].innerText = b;
+        this.parameters[2].innerText = c;
+        this.parameters[3].innerText = d;
+    }
+
+    setActiveParameter(n) {
+        if (n > 3) {
+            return;
+        }
+
+        this.parameters.forEach(it => it.classList.remove('active'));
+        this.parameters[n].classList.add('active');
     }
 
     setPanActive(v) {
@@ -174,7 +192,6 @@ class WindowManager {
     };
     parameterUpdateFunction = () => {
     };
-    parameterInputFilter = () => false;
 
     workspacePanel = undefined;
     canvasPanel = undefined;
@@ -185,7 +202,8 @@ class WindowManager {
     coordinate = undefined;
     status = undefined;
     output = undefined;
-    parameters = undefined;
+    parameterPanel = undefined;
+    parameters = [];
 
     /**
      * @type {Draw}

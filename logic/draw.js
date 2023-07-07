@@ -55,6 +55,14 @@ class Draw {
         this.lastCenterTop = this.centerTop;
     }
 
+    clientCoordinateToDrawCoordinate({clientX, clientY}) {
+        const canvasRect = this.canvas.getClientRects()[0];
+        const canvasOffset = this.originOffset();
+        const relativeLeft = clientX - canvasRect.x - canvasOffset.x;
+        const relativeTop = clientY - canvasRect.y - canvasOffset.y;
+        return {x: relativeLeft, y: relativeTop};
+    }
+
     canvas;
     ctx;
     w = 0;
