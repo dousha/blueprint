@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="static/98.css">
     <link rel="stylesheet" href="static/index.css">
     <script src="logic/draw.js"></script>
+    <script src="logic/command.js"></script>
     <script src="logic/wm.js"></script>
     <script src="logic/main.js"></script>
 </head>
@@ -60,9 +61,23 @@
     </div>
 </div>
 <div class="command-prompt">
-    <span>Blueprint v0.0.1</span>
-    <br>
-    <span>Type [H] for help.</span>
+    <p id="message">
+        Blueprint v0.0.1
+        <br>
+        Type [H] for help.
+    </p>
+</div>
+<div class="parameter-input" id="parameters">
+    <table>
+        <tbody>
+            <tr>
+                <td id="parameter-1">1</td>
+                <td id="parameter-2">2</td>
+                <td id="parameter-3">3</td>
+                <td id="parameter-4">4</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

@@ -26,6 +26,8 @@ class WindowManager {
         this.propertyPanel = document.getElementById('properties-view-container');
         this.coordinate = document.getElementById('coordinate');
         this.status = document.getElementById('status');
+        this.output = document.getElementById('message');
+        this.parameters = document.getElementById('parameters');
         this.draw = new Draw(document.getElementById('canvas'));
 
         const sideBarGrip = document.getElementById('sidebar-separator');
@@ -75,6 +77,15 @@ class WindowManager {
             if (this.isMouseDown) {
                 this.currentMoveFunction(e.clientX, e.clientY);
             }
+
+            this.parameters.style.left = `${e.clientX}px`;
+            this.parameters.style.top = `${e.clientY}px`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            this.isMouseDown = false;
+            this.currentMoveFunction = () => {
+            };
         });
 
         this.canvasPanel.addEventListener('mousemove', e => {
@@ -85,6 +96,8 @@ class WindowManager {
         });
 
         window.addEventListener('resize', this.windowResize);
+
+        this.setParameterInputVisibility(false);
         this.resizeCanvas();
         this.draw.paint();
     }
@@ -94,12 +107,23 @@ class WindowManager {
     }
 
     processKey(key) {
-        // TODO
         if (key === 'Escape') {
             this.currentMoveFunction = () => {
             };
             this.isMouseDown = false;
         }
+
+        cmd.processKey(key);
+    }
+
+    writeMessage(msg) {
+        this.output.innerText += `\n${msg}`;
+        const parent = this.output.parentElement;
+        parent.scrollTop = parent.scrollHeight;
+    }
+
+    setParameterInputVisibility(v) {
+        this.parameters.style.display = v ? 'block' : 'none';
     }
 
     isMouseDown = false;
@@ -114,6 +138,8 @@ class WindowManager {
 
     coordinate = undefined;
     status = undefined;
+    output = undefined;
+    parameters = undefined;
 
     /**
      * @type {Draw}

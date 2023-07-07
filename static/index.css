@@ -1,6 +1,7 @@
 body {
     margin: 0;
     user-select: none;
+    overflow: hidden;
 }
 
 .base-color {
@@ -104,4 +105,49 @@ canvas {
     bottom: calc(1rem + 4px);
     left: 1rem;
     font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+    max-height: 8rem;
+    overflow-y: scroll;
+    width: 40rem;
+    scrollbar-color: transparent transparent !important;
+    scrollbar-width: none !important;
+}
+
+.command-prompt::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+.parameter-input {
+    position: absolute;
+    pointer-events: none;
+    background: none;
+}
+
+.parameter-input > table {
+    border-collapse: separate;
+    border-spacing: 0.4em;
+}
+
+.parameter-input > table > tbody > tr > td {
+    display: table-cell;
+    vertical-align: center;
+    text-align: left;
+    padding: 0 0.2em;
+    min-width: 4em;
+    height: 1em;
+}
+
+#parameter-1 {
+    border: 1px solid red;
+}
+
+#parameter-2 {
+    border: 1px solid green;
+}
+
+#parameter-3 {
+    border: 1px solid blue;
+}
+
+#parameter-4 {
+    border: 1px solid cyan;;
 }
