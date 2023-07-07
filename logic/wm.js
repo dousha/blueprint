@@ -73,25 +73,48 @@ class WindowManager {
             };
         });
 
+        window.addEventListener('mousedown', e => {
+            if (!this.isPanActive) {
+                return;
+            }
+
+            this.isMouseDown = true;
+            this.panningStartPoint.x = e.clientX;
+            this.panningStartPoint.y = e.clientY;
+        });
+
         window.addEventListener('mousemove', e => {
             if (this.isMouseDown) {
-                this.currentMoveFunction(e.clientX, e.clientY);
+                if (this.isPanActive) {
+                    const relativeX = this.panningStartPoint.x - e.clientX;
+                    const relativeY = this.panningStartPoint.y - e.clientY;
+                    this.draw.panRelativeTo(relativeX, relativeY);
+                } else {
+                    this.currentMoveFunction(e.clientX, e.clientY);
+                }
             }
+
+            const canvasRect = this.canvasPanel.getClientRects()[0]
 
             this.parameters.style.left = `${e.clientX}px`;
             this.parameters.style.top = `${e.clientY}px`;
+            this.parameterUpdateFunction(e.clientX - canvasRect.x, e.clientY - canvasRect.y);
         });
 
         window.addEventListener('mouseup', () => {
             this.isMouseDown = false;
             this.currentMoveFunction = () => {
             };
+            if (this.isPanActive) {
+                this.draw.panCommit();
+            }
         });
 
         this.canvasPanel.addEventListener('mousemove', e => {
             const canvasRect = this.canvasPanel.getClientRects()[0];
-            const relativeLeft = e.clientX - canvasRect.x;
-            const relativeTop = e.clientY - canvasRect.y;
+            const canvasOffset = this.draw.originOffset();
+            const relativeLeft = e.clientX - canvasRect.x - canvasOffset.x;
+            const relativeTop = e.clientY - canvasRect.y - canvasOffset.y;
             this.coordinate.innerText = `(${relativeLeft}, ${relativeTop})`;
         });
 
@@ -126,9 +149,32 @@ class WindowManager {
         this.parameters.style.display = v ? 'block' : 'none';
     }
 
+    setParameterUpdateFunction(f) {
+        this.parameterUpdateFunction = f;
+    }
+
+    setParameterInputFilter(f) {
+        // TODO
+    }
+
+    setParameterCount(n) {
+        // TODO
+    }
+
+    setPanActive(v) {
+        this.canvasPanel.style.cursor = v ? 'grab' : 'crosshair';
+        this.isPanActive = v;
+    }
+
     isMouseDown = false;
+    isPanActive = false;
+    panningStartPoint = {x: 0, y: 0};
+
     currentMoveFunction = () => {
     };
+    parameterUpdateFunction = () => {
+    };
+    parameterInputFilter = () => false;
 
     workspacePanel = undefined;
     canvasPanel = undefined;

@@ -15,6 +15,7 @@ class Draw {
     }
 
     paint() {
+        this.ctx.clearRect(0, 0, this.w, this.h); // XXX: maybe partial refresh
         this.ctx.save();
         this.ctx.translate(Math.floor(this.w / 2) - this.centerLeft, Math.floor(this.h / 2) - this.centerTop);
         this.ctx.scale(devicePixelRatio, devicePixelRatio);
@@ -24,12 +25,44 @@ class Draw {
         this.ctx.restore();
     }
 
+    /**
+     * Return the canvas origin relative to the top-left corner of the canvas
+     * @returns {{x: number, y: number}}
+     */
+    originOffset() {
+        return {
+            x: Math.floor(this.w / 2) - this.centerLeft,
+            y: Math.floor(this.h / 2) - this.centerTop
+        };
+    }
+
+    panTo(x, y) {
+        this.centerLeft = x;
+        this.centerTop = y;
+        this.lastCenterLeft = this.centerLeft;
+        this.lastCenterTop = this.centerTop;
+        this.paint();
+    }
+
+    panRelativeTo(dx, dy) {
+        this.centerLeft = this.lastCenterLeft + dx;
+        this.centerTop = this.lastCenterTop + dy;
+        this.paint();
+    }
+
+    panCommit() {
+        this.lastCenterLeft = this.centerLeft;
+        this.lastCenterTop = this.centerTop;
+    }
+
     canvas;
     ctx;
     w = 0;
     h = 0;
     centerLeft = 0;
     centerTop = 0;
+    lastCenterLeft = 0;
+    lastCenterTop = 0;
 
     /**
      *
@@ -64,8 +97,8 @@ class Origin extends DrawObject {
 
     draw(ctx) {
         ctx.fillStyle = this.baseColor;
-        ctx.fillRect(-5, 0, 11, 1);
-        ctx.fillRect(0, -5, 1, 11);
+        ctx.fillRect(-5, 0, 16, 1);
+        ctx.fillRect(0, -5, 1, 16);
         ctx.fillStyle = this.accentColor;
         ctx.fillRect(0, 0, 1, 1);
     }
