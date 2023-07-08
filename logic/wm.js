@@ -132,13 +132,25 @@ class WindowManager {
     }
 
     processKey(key) {
-        if (key === 'Escape') {
+        let assembledKey = key.key;
+
+        if (key.altKey) {
+            assembledKey = "[" + assembledKey;
+        }
+
+        if (key.ctrlKey || key.metaKey) {
+            assembledKey = "^" + assembledKey;
+        }
+
+        if (assembledKey === 'Escape') {
             this.currentMoveFunction = () => {
             };
             this.isMouseDown = false;
         }
 
-        cmd.processKey(key);
+        cmd.processKey(assembledKey);
+        key.preventDefault();
+        key.stopPropagation();
     }
 
     writeMessage(msg) {
